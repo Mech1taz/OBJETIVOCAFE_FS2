@@ -1,0 +1,49 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Snapshot: TarjetaProducto > debe mantener el diseño visual de la tarjeta 1`] = `
+<div>
+  <div
+    class="col-sm-4 mb-4"
+  >
+    <div
+      class="card m-2 shadow h-100"
+      style="border-radius: 1rem; overflow: hidden; border: medium;"
+    >
+      <img
+        alt="Café Snapshot"
+        class="card-img-top"
+        src="/img/test.png"
+        style="height: 220px; object-fit: cover; width: 100%;"
+      />
+      <div
+        class="card-body d-flex flex-column text-center"
+      >
+        <h4
+          class="card-title"
+        >
+          Café Snapshot
+        </h4>
+        <h4
+          class="mt-auto fw-bold"
+          style="color: rgb(166, 99, 75);"
+        >
+          $
+          5.000
+        </h4>
+        <p
+          class="card-text flex-grow-1"
+        >
+          Descripción para la foto
+        </p>
+        <a
+          class="btn btn-primary mt-auto"
+          data-discover="true"
+          href="/productos/50"
+        >
+          Ver más...
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;

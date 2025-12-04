@@ -1,0 +1,87 @@
+/* Tipografía */
+body {
+  background-color: #F2F2F2; 
+  color: #261914;
+  font-family: 'Montserrat', sans-serif;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Playfair Display', serif;
+}
+p {
+  font-family: 'Montserrat', sans-serif;
+  color: #261914; 
+}
+body {
+  background-color: #F2F2F2; 
+  color: #261914;           
+}
+
+.navbar {
+  background-color: #261914 !important; 
+}
+
+.navbar-brand {
+  color: #A6634B !important; 
+}
+
+.navbar-brand:hover {
+  color: #A68B81 !important; 
+}
+
+.nav-link {
+  color: #F2F2F2 !important; 
+}
+
+.nav-link:hover {
+  color: #A6634B !important; 
+}
+
+/* Encabezados */
+h1, h4 {
+  color: #593831; 
+}
+
+/* Botones */
+.btn-primary {
+  background-color: #A6634B; 
+  border-color: #A6634B;
+}
+
+.btn-primary:hover {
+  background-color: #593831; 
+  border-color: #593831;
+}
+.bg-primary {
+  background-color: #A6634B !important; 
+  color: #F2F2F2 !important;            
+}
+/* --- Estilos de la Página de Inicio --- */
+
+.hero-section {
+  /* Asegúrate de tener esta imagen en public/img/ */
+  background: url('/img/fondo_cafe.jpg') center/cover no-repeat;
+  color: white;
+  padding: 6rem 2rem;
+  text-align: center;
+  box-shadow: inset 0 0 0 2000px rgba(38, 25, 20, 0.6);
+  margin-bottom: 3rem;
+}
+
+.home-card {
+  border: none;
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.home-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.home-card img {
+  height: 220px;
+  object-fit: cover;
+}

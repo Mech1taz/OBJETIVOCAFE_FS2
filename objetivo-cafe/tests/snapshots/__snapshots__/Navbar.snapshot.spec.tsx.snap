@@ -1,0 +1,116 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Snapshot: Navbar > debe coincidir con el diseño esperado 1`] = `
+<div>
+  <nav
+    class="navbar navbar-expand-sm bg-dark navbar-dark mb-4"
+  >
+    <div
+      class="container-fluid"
+    >
+      <a
+        class="navbar-brand"
+        data-discover="true"
+        href="/"
+      >
+        Objetivo Café
+      </a>
+      <button
+        class="navbar-toggler"
+        data-bs-target="#collapsibleNavbar"
+        data-bs-toggle="collapse"
+        type="button"
+      >
+        <span
+          class="navbar-toggler-icon"
+        />
+      </button>
+      <div
+        class="collapse navbar-collapse"
+        id="collapsibleNavbar"
+      >
+        <ul
+          class="navbar-nav me-auto"
+        >
+          <li
+            class="nav-item"
+          >
+            <a
+              class="nav-link"
+              data-discover="true"
+              href="/cafes"
+            >
+              Café
+            </a>
+          </li>
+          <li
+            class="nav-item"
+          >
+            <a
+              class="nav-link"
+              data-discover="true"
+              href="/cafeteras"
+            >
+              Cafeteras
+            </a>
+          </li>
+          <li
+            class="nav-item"
+          >
+            <a
+              class="nav-link"
+              data-discover="true"
+              href="/accesorios"
+            >
+              Accesorios
+            </a>
+          </li>
+          <li
+            class="nav-item"
+          >
+            <a
+              class="nav-link"
+              data-discover="true"
+              href="/metodos"
+            >
+              Guía
+            </a>
+          </li>
+        </ul>
+        <ul
+          class="navbar-nav align-items-center"
+        >
+          <li
+            class="nav-item me-3"
+          >
+            <a
+              class="nav-link position-relative"
+              data-discover="true"
+              href="/carrito"
+            >
+              <i
+                class="fas fa-shopping-cart"
+              />
+               Carrito
+            </a>
+          </li>
+          <li
+            class="nav-item"
+          >
+            <a
+              class="nav-link"
+              data-discover="true"
+              href="/login"
+            >
+              <i
+                class="fas fa-user"
+              />
+               Iniciar Sesión
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+`;
