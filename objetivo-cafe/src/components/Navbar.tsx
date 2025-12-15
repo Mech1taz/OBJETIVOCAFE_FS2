@@ -57,7 +57,11 @@ export const Navbar: React.FC = () => {
                                 </a>
                                 <ul className="dropdown-menu dropdown-menu-end">
                                     <li><Link className="dropdown-item" to="/usuario">Mi Perfil</Link></li>
-                                    <li><Link className="dropdown-item" to="/admin/resumen">Panel Admin</Link></li>
+                                    
+                                    {user.role === 'admin' && (
+                                        <li><Link className="dropdown-item" to="/admin/resumen">Panel Admin</Link></li>
+                                    )}
+
                                     <li><hr className="dropdown-divider"/></li>
                                     <li>
                                         <button className="dropdown-item text-danger" onClick={handleLogout}>

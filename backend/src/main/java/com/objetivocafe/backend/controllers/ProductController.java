@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "http://localhost:5173") // Permite que React entre
+@CrossOrigin(origins = "http://localhost:5173")
 public class ProductController {
 
     @Autowired
@@ -23,19 +23,19 @@ public class ProductController {
         return repository.findAll();
     }
 
-    // 2. CREAR UNO (POST)
+    // 2. CREAR UNO 
     @PostMapping
     public Product createProduct(@RequestBody Product product) {
         return repository.save(product);
     }
     
-    // 2.1. CREAR MUCHOS (POST Masivo - Batch)
+    // 2.1. CREAR MUCHOS 
     @PostMapping("/batch")
     public List<Product> createProducts(@RequestBody List<Product> products) {
         return repository.saveAll(products);
     }
 
-    // 3. ACTUALIZAR (PUT) - ¡NUEVO!
+    // 3. ACTUALIZAR
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
         // Buscamos si existe el producto con ese ID
@@ -62,14 +62,15 @@ public class ProductController {
         }
     }
 
-    // 4. ELIMINAR (DELETE) - ¡NUEVO!
+    // 4. ELIMINAR 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
-            return ResponseEntity.noContent().build(); // 204 No Content (Éxito)
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+    
 }

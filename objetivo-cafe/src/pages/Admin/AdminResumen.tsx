@@ -1,54 +1,85 @@
-import React from 'react';
-import { useProducts } from '../../hooks/useProducts';
-import { getOrders } from '../../utils/orderUtils';
-// CORRECCIÓN: Importamos la función con el nombre correcto para evitar el error
-import { getRegisteredUsers } from '../../utils/authUtils'; 
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+interface Order {
+    id: number;
+    clienteNombre: string;
+    total: number;
+    fecha: string;
+    detalles: string;
+    estado: string;
+}
 
 export const AdminResumen: React.FC = () => {
-    const { products } = useProducts();
-    // Usamos la función correcta para obtener usuarios
-    const users = getRegisteredUsers(); 
-    const orders = getOrders();
+    const [orders, setOrders] = useState<Order[]>([]);
+    const fetchOrders = () => {
+        axios.get('http://localhost:8080/api/orders')
+            .then(res => setOrders(res.data))
+            .catch(err => console.error(err));
+    };
 
-    // Calcular total sumando la propiedad 'total' de cada orden real
+    useEffect(() => {
+        fetchOrders();
+    }, []);
+
+    // Para cambiar estado
+    const handleEstadoChange = (id: number, nuevoEstado: string) => {
+        axios.put(`http://localhost:8080/api/orders/${id}/status?nuevoEstado=${nuevoEstado}`)
+            .then(() => {
+                fetchOrders(); 
+                alert('Estado actualizado correctamente');
+            })
+            .catch(() => alert('Error al actualizar estado'));
+    };
+
     const totalVentas = orders.reduce((sum, order) => sum + order.total, 0);
 
     return (
         <div>
-            <h2 className="mb-4">Resumen General</h2>
-            <div className="row">
-                {/* Tarjeta de Usuarios */}
-                <div className="col-md-4">
-                    <div className="card text-white shadow-sm mb-3" style={{ backgroundColor: '#A6634B' }}>
-                        <div className="card-header">Usuarios Registrados</div>
-                        <div className="card-body">
-                            <h1 className="card-title text-center">{users.length}</h1>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Tarjeta de Productos */}
-                <div className="col-md-4">
-                    <div className="card text-dark bg-warning bg-opacity-25 shadow-sm mb-3">
-                        <div className="card-header fw-bold">Total Productos</div>
-                        <div className="card-body">
-                            <h1 className="card-title text-center">{products.length}</h1>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Tarjeta de Ventas */}
-                <div className="col-md-4">
-                    <div className="card text-white bg-success shadow-sm mb-3">
-                        <div className="card-header">Ventas Totales</div>
-                        <div className="card-body">
-                            <h1 className="card-title text-center">
-                                ${totalVentas.toLocaleString('es-CL')}
-                            </h1>
-                        </div>
-                    </div>
+            <h2 className="mb-4">Resumen de Ventas</h2>
+            
+            <div className="card shadow-sm mb-4">
+                <div className="card-body bg-success text-white">
+                    <h3>Total Ventas: ${totalVentas.toLocaleString('es-CL')}</h3>
                 </div>
             </div>
+
+            <table className="table table-bordered table-hover bg-white shadow-sm">
+                <thead className="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Detalle</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {orders.map(order => (
+                        <tr key={order.id}>
+                            <td>{order.id}</td>
+                            <td>{order.clienteNombre}</td>
+                            <td><small>{order.detalles}</small></td>
+                            <td>${order.total.toLocaleString('es-CL')}</td>
+                            <td>
+                                <select 
+                                    className={`form-select form-select-sm ${
+                                        order.estado === 'Entregado' ? 'bg-success text-white' : 
+                                        order.estado === 'Pagado' ? 'bg-primary text-white' : 'bg-warning'
+                                    }`}
+                                    value={order.estado || 'Pendiente'}
+                                    onChange={(e) => handleEstadoChange(order.id, e.target.value)}
+                                >
+                                    <option value="Pendiente">Pendiente</option>
+                                    <option value="Pagado">Pagado</option>
+                                    <option value="Entregado">Entregado</option>
+                                    <option value="Cancelado">Cancelado</option>
+                                </select>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };

@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { CartItem, Product } from '../types';
+// Importamos SweetAlert2 para las notificaciones bonitas
+import Swal from 'sweetalert2'; 
 
-// Importamos las utilidades necesarias
-import { getCart, saveCart, calculateTotal, clearCart, addToCart, removeFromCart, finalizePurchase } from '../utils/cartUtils'; // Agregué finalizePurchase por si acaso, aunque usaremos createOrder
-import { createOrder, getStock } from '../utils/orderUtils';
-import { getCurrentUser } from '../utils/authUtils';
+import { getCart, calculateTotal, clearCart as clearCartUtil, addToCart, removeFromCart } from '../utils/cartUtils'; 
+import { getStock } from '../utils/orderUtils';
 
 export const useCart = () => {
     const [cart, setCart] = useState<CartItem[]>(getCart());
@@ -18,69 +18,73 @@ export const useCart = () => {
 
     useEffect(() => {
         refreshCart();
-        
         window.addEventListener('storage', refreshCart);
         return () => window.removeEventListener('storage', refreshCart);
     }, [refreshCart]);
 
-    // --- AGREGAR CON VALIDACIÓN DE STOCK ---
+    // --- AGREGAR PRODUCTO (AHORA CON SWAL) ---
     const addProduct = (product: Product, opcion: string, cantidad: number) => {
         const stockActual = getStock(product.id);
-        
         const itemEnCarrito = cart.find(i => i.product.id === product.id);
         const cantidadEnCarrito = itemEnCarrito ? itemEnCarrito.cantidad : 0;
 
+        // Validación de Stock con Alerta Roja
         if ((cantidad + cantidadEnCarrito) > stockActual) {
-            alert(`¡No hay suficiente stock! Solo quedan ${stockActual} unidades disponibles.`);
+            Swal.fire({
+                icon: 'error',
+                title: 'Stock Insuficiente',
+                text: `Solo quedan ${stockActual} unidades disponibles de este café.`,
+                confirmButtonColor: '#A6634B'
+            });
             return;
         }
 
         addToCart(product, opcion, cantidad);
         refreshCart();
-        alert("Producto agregado");
+
+        // ✅ Notificación de Éxito (Se cierra sola en 1.5 segundos)
+        Swal.fire({
+            icon: 'success',
+            title: '¡Agregado!',
+            text: 'El producto ya está en tu carrito 🛒',
+            showConfirmButton: false, // No hace falta botón
+            timer: 1500, // Se va sola en 1.5 seg
+            timerProgressBar: true
+        });
     };
 
     // --- ELIMINAR PRODUCTO ---
     const removeProduct = (productId: number, opcion: string) => {
         removeFromCart(productId, opcion);
         refreshCart();
+        
+        // Opcional: Una pequeña notificación tipo "Toast" en la esquina
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+        });
+        Toast.fire({
+            icon: 'info',
+            title: 'Producto eliminado'
+        });
     };
 
-    // --- COMPRAR ---
-    const buy = (): boolean => {
-        if (cart.length === 0) return false;
-        
-        const user = getCurrentUser();
-        if (!user) {
-            alert("Debes iniciar sesión para comprar.");
-            return false; 
-        }
-
-        // 1. Crear la orden (Esto descuenta el stock internamente)
-        const orderId = createOrder(cart, user.email, calculateTotal(cart));
-        
-        // 2. Guardar la 'ultimaCompra' para que la Boleta tenga qué mostrar
-        localStorage.setItem('ultimaCompra', JSON.stringify(cart));
-
-        // 3. Limpiar todo
-        clearCart(); // Vaciar localStorage del carrito
-        setCart([]); // Vaciar estado visual
-        setTotal(0);
-        
-        alert(`¡Compra exitosa! Tu código de seguimiento es: ${orderId}`);
-    
-
-        return true; 
+    // --- VACIAR CARRITO ---
+    const vaciarCarrito = () => {
+        clearCartUtil(); 
+        refreshCart();   
     };
 
     return { 
         cart, 
         total,
-        totalItems: cart.reduce((sum, item) => sum + item.cantidad, 0), // Agregado para que el Navbar no falle
-        totalPrice: total, // Agregado por compatibilidad
+        totalItems: cart.reduce((sum, item) => sum + item.cantidad, 0),
         addProduct, 
-        removeProduct, 
-        buy,
+        removeProduct,
+        vaciarCarrito, 
         refreshCart
     };
 };
